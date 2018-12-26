@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title></title>
+	<script src="file://$corePath/sorttable.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="file://$corePath/report.css?version=$randomValue" type="text/css" charset="utf-8">
+	<link rel="stylesheet" href="file://$corePath/print.css?version=$randomValue" media="print" type="text/css" charset="utf-8">
+</head>
+<body>
+
+<div id="container">
+	<div id="header">
+		<div id="name">
+			$format.string($report.name)
+		</div>
+		<div id="date">
+			$format.string('Date Range'): $format.onlyDate($report.dateRange.begin) - $format.onlyDate($report.dateRange.end)
+		</div>
+	</div>
+
+	<div class="table_name">$format.string('Best Selling Brands')</div>
+	<table cellspacing="0" cellpadding="0" class="sortable">
+		<thead>
+			<tr>
+				<th>$format.string('Brand')</th>
+				<th>$format.string('Quantity Sold')</th>
+				<th>$format.string('Revenue')</th>
+				<th class="sorttable_sorted_reverse sorttable_numeric">$format.string('% of Revenue')</th><!-- First Sort -->
+			</tr>
+		</thead>
+		<tbody>
+			#for $brand in $brands
+			<tr>
+				<td style="text-align:left;">
+				  #if $brand.brand
+				  $brand.brand
+				  #else
+				  $format.string('UNBRANDED')
+				  #end if
+				</td>
+				<td>$format.quantity($brand.quantity)</td>
+				<td sorttable_customkey="$brand.revenue">$format.currency($brand.revenue)</td>
+				<td sorttable_customkey="$brand.percentage_revenue)">$format.quantity($brand.percentage_revenue) %</td>
+			</tr>
+			#end for
+		</tbody>
+		<tfoot>
+			<td style="text-align:left;"><b>Totals</b></td>
+			<td>$format.quantity($performance_totals.quantity)</td>
+			<td>$format.currency($performance_totals.revenue)</td>
+			<td>$format.quantity(100) %</td>
+		</tfoot>
+	</table>
+
+	#if len($top5_brands) > 0
+	<div id="header">
+		<div id="name">
+			Top $len($top5_brands) Brands
+		</div>
+		<div id="date">
+			$format.string('Date Range'): $format.onlyDate($report.dateRange.begin) - $format.onlyDate($report.dateRange.end)
+		</div>
+	</div>
+	#end if
+	#set $brand_counter = 0
+	#for $brand in $top5_brands
+		<div class="table_name">
+		  #if $brand.brand
+		  $brand.brand
+		  #else
+		  $format.string('UNBRANDED')
+		  #end if
+
+		</div>
+		<table cellspacing="0" cellpadding="0" class="sortable">
+			<thead>
+				<tr>
+					<th>$format.string('Product')</th>
+					<th>$format.string('Quantity Sold')</th>
+					<th>$format.string('Revenue')</th>
+					<th>$format.string('% of Brand Revenue')</th><!-- First Sort -->
+				</tr>
+			</thead>
+			<tbody>
+			  #for $product in $top5_brand_products[$brand_counter]
+			  <tr>
+			    <td style="text-align:left;">$format.string($product.name)</td>
+			    <td>$format.quantity($product.quantity)</td>
+			    <td sorttable_customkey="$product.revenue">$format.currency($product.revenue)</td>
+			    <td sorttable_customkey="$format.percentage($product.percentage_revenue)">$format.quantity($product.percentage_revenue) %</td>
+			  </tr>
+			  #end for
+			</tbody>
+			<tfoot>
+				<td style="text-align:left;"><b>Totals</b></td>
+				<td>$format.quantity($brand.quantity)</td>
+				<td>$format.currency($brand.revenue)</td>
+				<td></td>
+			</tfoot>
+		</table>
+		#set $brand_counter += 1
+	#end for
+</div>
+</body>
+</html>
+
