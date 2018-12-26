@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title></title>
+	<script src="file://$corePath/sorttable.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="file://$corePath/report.css?version=$randomValue" type="text/css" charset="utf-8">
+	<link rel="stylesheet" href="file://$corePath/print.css?version=$randomValue" media="print" type="text/css" charset="utf-8">
+</head>
+<body>
+
+<div id="container">
+	<div id="header">
+		<div id="name">
+			$format.string($report.name)
+		</div>
+		<div id="date">
+			$format.string('Date Range'): $format.onlyDate($report.dateRange.begin) - $format.onlyDate($report.dateRange.end)
+		</div>
+	</div>
+
+	<table cellspacing="0" cellpadding="0" class="sortable">
+		<thead>
+			<tr>
+				<th>$format.string('Date')</th>
+				<th>$format.string('Code')</th>
+				<th>$format.string('Amount')
+				<th>$format.string('Name')</th>
+				<th>$format.string('Quantity')</th>
+				<th>$format.string('Employee')</th>
+				<th>$format.string('Description')</th>
+			</tr>
+		</thead>
+		<tbody>
+			#for $invoice in $allInvoices
+			#for $invoiceLine in $invoice.children
+			<tr>
+				<td style="text-align:left;">$format.shortDate($invoice.date)</td>
+				<td style="text-align:left;">$invoiceLine.product.md.code</td> <!-- show the latest code, not the historical code #3437 -->
+				<td>$format.currency($invoiceLine.totalCost())</td>
+				<td style="text-align:left;">$invoiceLine.md.name</td>
+				<td>$format.quantity($invoiceLine.quantity)</td>
+				<td style="text-align:left;">$invoice.employee.name</td>
+
+				<td style="text-align:right;">
+				  #if $invoiceLine.parent.currentNote
+				  $invoiceLine.parent.currentNote.content
+				  #end if
+				</td>
+			</tr>
+			#end for
+			#end for
+		</tbody>
+		<tfoot>
+		  <td colspan="2"></td>
+		  <td>$format.currency($grandTotalCost)</td>
+		  <td colspan="4"></td>
+		</tfoot>
+	</table>
+</div>
+</body>
+</html>

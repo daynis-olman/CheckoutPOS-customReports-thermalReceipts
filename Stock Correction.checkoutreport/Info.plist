@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>English</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>08050</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>Stock Correction,
+    © 2006-2018 Acclivity Group LLC - All rights reserved</string>
+	<key>TemplateType</key>
+	<string>template</string>
+</dict>
+</plist>
