@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title></title>
+	<link href="common.css?versopm=$randomValue" rel="stylesheet" type="text/css" />
+	<link href="style.css?version=$randomValue" rel="stylesheet" type="text/css" />
+</head>
+<!-- checkout:header -->
+
+<body>
+	<div class="doc-header">
+
+		<span id="doc_name">
+			$l10n.localize_chars_only($documentTitle)
+		</span>
+		<span id="doc_info">
+			<b>$l10n.localize('Date')</b> $format.longDate($date)
+		</span>
+		<div class="container clearfix">
+			<div class="col col-2 col-left">
+			<br><br>
+		#if $supplier
+		<div id="client_info">
+			#if $supplier.md.company and $supplier.md.name
+				<i>$supplier.md.company</i><br>
+				<b>$format.name($supplier.md.name)</b><br>
+			#elif $supplier.md.company
+				<b>$supplier.md.company</b><br>
+			#elif $supplier.md.name
+				<b>$format.name($supplier.md.name)</b><br>
+			#end if
+
+			#if $supplier.md.address
+				$format.address($supplier.md.address)
+			#end if
+
+			#if $supplier.md.taxnumber
+				$l10n.localize('Tax Number'): $supplier.md.taxnumber
+			#end if
+		</div>
+		#end if
+
+	</div>
+			<div class="col col-6 col-right">
+		#if $storeImageURL
+			#if $storeImageAutoSize == True:
+				<img class="store-logo" src="$storeImageURL" alt="" />
+			#else
+				<img src="$storeImageURL" alt="" />
+			#end if
+		#else
+			<span id="store_name">$storeName</span>
+		#end if
+	</div>
+
+</div>
+</div>
+	<!-- checkout:content -->
+
+	<!-- product list -->
+	<table id="products" cellspacing="0" cellpadding="0">
+		<thead>
+			<tr>
+				<th class="left">$l10n.localize('Description')</th>
+				<th class="left">$l10n.localize('Quantity Pending')</th>
+				<th class="left">$l10n.localize('Received')</th>
+				<th class="right">$l10n.localize('Unit Price')</th>
+				<th class="right">$l10n.localize('Total Pending On Order')</th>
+				<th class="right">$l10n.localize('Total Received')</th>
+			</tr>
+		</thead>
+		<tbody>
+		#for $product in $productChildren
+			<tr>
+				<td class="left">$product.md.code <span class="code">($product.md.name)</span></td>
+				<td class="left">$format.quantity($product.quantity)</td>
+				<td class="left">$format.quantity($product.received)</td>
+				<td class="price">$format.currency($product.priceEx)</td>
+				<td class="price total">$format.currency($product.outstandingTotalPriceEx)</td>
+				<td class="price total">$format.currency($product.completeTotalPriceEx)</td>
+			</tr>
+		#end for
+		</tbody>
+	</table>
+
+	<!-- checkout:footer -->
+	<div id="doc_total">
+	    <div class="container clearfix">
+	    	<!-- Display Last Note -->
+			<div class="col col-left col-2">
+				#if $currentNote and $PurchaseOrderNotesField
+					#if $len($allNotes) > 1
+						<div class="notes">
+							<h4 class="notes_title">$l10n.localize('Notes')</h4>
+							<ul>
+							#for note in $allNotes
+								<li>$note.content</li>
+							#end for
+							</ul>
+						</div>
+					#else
+						<div class="notes">
+							<h4 class="notes_title">$l10n.localize('Note')</h4>
+								<ul>
+									<li>$currentNote.content</li>
+								</ul>
+						</div>
+					#end if
+				#end if
+
+				<div id="store_info">
+					<b>$employee.name()</b><br>
+					$templateHeader
+				</div>
+				<div style="clear:both;"></div>
+			</div>
+
+			<div class="col col-right col-3">
+			    <table id="onorder" class="table">
+			        <tbody>
+			        <!-- on order totals -->
+			        <tr class="totalheader">
+			             <td></td>
+			             <td>$l10n.localize('On Order')</td>
+			        </tr>
+
+			        <tr class="sub">
+			             <td>$l10n.localize('Subtotal'):</td>
+			             <td class="price">$format.currency($outstandingTotalPriceEx)</td>
+			        </tr>
+			        <tr>
+			             <td>$l10n.localize('Taxes'):</td>
+			             <td class="price">$format.currency($outstandingTotalTax)</td>
+			        </tr>
+			        <tr class="total">
+			             <td>$l10n.localize('Total'):</td>
+			             <td class="price">$format.currency($outstandingTotalPriceIn)</td>
+			        </tr>
+			        </tbody>
+			    </table>
+			</div>
+
+			<div class="col col-right col-3">
+			    <table id="received" class="table">
+			      <tbody>
+			        <!-- received totals -->
+			        <tr class="totalheader">
+			          <td></td>
+			          <td>$l10n.localize('Received')</td>
+			        </tr>
+
+			        <tr class="sub">
+			          <td>$l10n.localize('Subtotal'):</td>
+			          <td class="price">$format.currency($completeTotalPriceEx)</td>
+			        </tr>
+			        <tr>
+			          <td>$l10n.localize('Taxes'):</td>
+			          <td class="price">$format.currency($completeTotalTax)</td>
+			        </tr>
+			        <tr class="total">
+			          <td>$l10n.localize('Total'):</td>
+			          <td class="price">$format.currency($completeTotalPriceIn)</td>
+			        </tr>
+			      </tbody>
+			    </table>
+			</div>
+		</div>
+	</div>
+
+	#if $templateFooter
+	<div id="store_footer">
+		$templateFooter
+	</div>
+	#end if
+
+<!-- checkout:end -->
+</body>
+</html>

@@ -1,0 +1,71 @@
+body {font-family: Monaco, monospace; text-align:left; color:#000; margin:0; padding:0;}
+    .right {text-align:right;}
+.left {text-align:left;}
+
+#doc_header {margin-bottom:10px; border-bottom:1px solid #000; text-align:center; font-size: 10px;}
+#store_name {font-size:15px; font-weight:bold;}
+#client_info {text-align:center; font-size: 10px;}
+
+table#products {font-size:10px; width:100%; margin:2em 0;
+    border-top:1px solid #000; border-bottom:1px solid #000; border-left:0; border-right:0;}
+th {padding:0.2em 0.1em; border-bottom:1px solid #000;}
+.qty {padding:0.2em 0.5em; text-align:center;} /* tr's and th's */
+.price {padding:0.2em 0.1em; white-space:nowrap; text-align:right;}
+td {padding:0.2em 0.1em; vertical-align:top;}
+tr.sub td {border-top:1px solid #000; border-bottom:1px solid #000;}
+tr.total td {border-top:solid #000 2px; border-bottom: #000 1px; text-align:right;}
+
+#card_signature {padding:0em 3em; text-align:left;}
+#sign_line {margin-top:1em; border-bottom:1px solid #000; padding-bottom:0.5em;}
+
+#doc_info {text-align:center; font-size: 10px;}
+#doc_info h4 {padding: 0px 15px; text-align:left; font-size: 10px;}
+#doc_info li {text-align:left; font-size: 10px;}
+#store_footer {border-top:1px solid #000; margin:10px 0px; text-align:center; font-size: 10px;}
+
+/* Credit Card data
+---------------------*/
+.unstyled {padding: 0em; list-style: none; font-size: 10px;}
+
+
+/* total discount
+------------------*/
+tr.total_discount td {padding: 3.5em 0;}
+
+/* TIP and Total Paid
+------------------*/
+.clearfix {
+     *zoom: 1;
+}
+
+.clearfix:before, .clearfix:after {
+    display: table;
+    content: "";
+    line-height: 0;
+}
+.clearfix:after {clear: both;}
+
+.container{width:100%;}
+
+.signature {padding: 50%; text-align:center;}
+
+.signature_agreement {font-size: 10px; text-align: center; font-weight: bold;}
+
+.col{float:left; font-size: 10px;}
+
+.col.value{border-bottom:1px solid #000; text-indent:-24px;}
+.col.val{border-bottom:0px; text-align:right;}
+
+.col-2{width:50%; margin:30px 0;}
+.col-3{width:50%; margin:5px 0;}
+
+
+/*  Reciept title
+ ------------------ */
+.receipt_name {text-align: center;}
+
+.store-logo {
+    height: auto;
+    max-height: 100px;
+    max-width : 100%;
+}

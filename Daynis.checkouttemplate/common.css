@@ -1,0 +1,43 @@
+.clearfix { *zoom: 1; }
+.clearfix:before, .clearfix:after {
+    display: block;
+    content: "";
+    line-height: 0;
+}
+.clearfix:after { clear: both; }
+.container { width:100%; margin-bottom: 1.5em; }
+.col { min-height: 1px; float:left; margin: 0 1%; display: block; }
+.col .notes_title { width: inherit !important; }
+.col.signature{ font-family: "Monaco"; padding-top: 20px; }
+.col.underline{ border-bottom: 1px solid #000; padding-top: 40px; }
+
+.col-1{width: 10.5%;}
+.col-2{width: 23%;}
+.col-3{width: 35.5%;}
+.col-3-center-flexible{min-width: 25.5%;max-width: 35.5%}
+.col-3-flexible{min-width: 35.5%;max-width: 45.5%}
+.col-4{width: 48%;}
+.col-5{width: 60.5%;}
+.col-6{width: 73%;}
+.col-7{width: 85.5%;}
+.col-8{width: 100%;}
+.col-right{text-align: right;}
+.col-left{text-align: left;}
+.col-center{text-align: center;}
+
+.pull-left {
+    float: left;
+}
+.pull-right { float : right; }
+
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    max-width: 100%;
+}
+
+.table { width : 100%; }
+
+.store-logo { height: auto; max-height: 100px; max-width: 100%; }
+
+.doc-header { margin-bottom: 3em; position: relative; }

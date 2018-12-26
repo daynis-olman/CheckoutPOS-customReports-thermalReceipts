@@ -1,0 +1,357 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title></title>
+ 	<link href="receipt.css?version=$randomValue" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<div id="doc_header">
+	#if $storeName
+		<div id="store_name">$storeName</div>
+	#end if
+	#if $templateHeader
+		$templateHeader
+	#end if
+	#if $storeLogoOnReceipt and $storeImageURL
+		<br />
+		<img src="$storeImageURL" alt="" class="store-logo" />
+	#end if
+	</div>
+
+	#if $client
+		<div id="client_info">
+			#if $md.company and $md.name
+				<i>$md.company</i><br>
+				<b>$format.name($md.name)</b><br>
+			#elif $md.company
+				<b>$format.name($md.company)</b><br>
+			#elif $md.name
+				<b>$format.name($md.name)</b><br>
+			#end if
+
+			#if $md.address
+				$format.address($md.address)
+			#end if
+
+			#if $md.taxnumber
+				$l10n.localize('Tax Number'): $md.taxnumber
+			#end if
+		</div>
+	#end if
+
+
+	<div class="receipt_name">
+	#if $PrintGiftOrPackingSlip == 'gift'
+		<h1>GIFT RECEIPT</h1>
+	#elif $PrintGiftOrPackingSlip == 'packingSlip'
+		<h1>PACKING SLIP</h1>
+	#end if
+	</div>
+
+
+	<table id="products" cellspacing="0" cellpadding="0">
+		<thead>
+			<tr>
+				<th class="qty">$l10n.localize('QTY')</th>
+				<th class="left">$l10n.localize('PRODUCT')</th>
+				#if $PrintGiftOrPackingSlip == 'regular'
+				<th class="price">$l10n.localize('PRICE')</th>
+				#else
+				<th class="price">$l10n.localize('PRICE')</th>
+				#end if
+			</tr>
+		</thead>
+		<tbody>
+			#for $product in $productChildren
+			<tr>
+				<td class="qty">$format.quantity($product.quantity)</td>
+				<td class="left">$product.displayName
+
+					<!-- Product Description -->
+
+					#if $ReceiptPrintProductDescription
+						#if $product.md.description
+							<br>$product.md.description
+						#end if
+					#end if
+
+					#if $product.serials
+					<br>
+					#for $serial in $product.serials
+					#if $serial.value
+					<span>$serial.value</span>
+					#end if
+					#end for
+					#end if
+				</td>
+				#if $PrintGiftOrPackingSlip == 'regular'
+				#if $ReceiptProductsIncludingTax
+				<td class="price">$format.currency($product.totalPriceIn)</td>
+				#else
+				<td class="price">$format.currency($product.totalPriceEx)</td>
+				#end if
+				#end if
+			</tr>
+				#if $product.discount_percentage > 0 and $PrintGiftOrPackingSlip == 'regular'
+					#if $ReceiptProductsIncludingTax
+						<td class = "right" colspan = "2">$l10n.localize('Orig. Unit Price ') $format.currency($product.product.priceIn)
+						<br>
+					#else
+						<td class = "right" colspan = "2">$l10n.localize('Orig. Unit Price ') $format.currency($product.product.priceEx)
+							<br>
+					#end if
+
+					$format.quantity($product.discount_percentage)$l10n.localize('% Discount')
+					</td>
+				#end if
+			#end for
+
+			#if $PrintGiftOrPackingSlip == 'regular'
+
+			<!-- ShippingMethod -->
+			#if $shippingMethodRequest
+			<tr class="sub">
+				<td class="right" colspan="2">$l10n.localize('Shipping') ($getBindableShippingMethod):</td>
+				<td class="price">$format.currency($shippingMethodRequest.totalPriceEx)</td>
+			</tr>
+			#end if
+
+			<!-- Discount -->
+			#if $ReceiptTotalDiscountInfo and $receiptTotalDiscount > 0
+			<tr class="total_discount">
+				<td class="right" colspan="2">$l10n.localize('Total Discount'): $format.currency($receiptTotalDiscount)</td>
+			</tr>
+			#end if
+
+      <!-- subtotal -->
+        #if $ReceiptShowTaxesAndSubtotal
+			<tr class="sub">
+				<td class="right" colspan="2">$l10n.localize('Subtotal'):</td>
+				<td class="price">$format.currency($totalPriceEx)</td>
+			</tr>
+
+			<!-- taxes prefs -->
+			#if $ReceiptCombinedTaxInTotals
+			<tr>
+				<td class="right" colspan="2">$l10n.localize('Taxes'):</td>
+				<td class="price">$format.currency($totalTax)</td>
+			</tr>
+			#else
+			#for tax in $totalTaxes
+			<tr>
+				<td class="right" colspan="2">$tax.name $format.taxrate($tax.rate)
+                 #if $TemplasteShowTaxExAmountForTaxRate
+                     <span style='white-space:nowrap;'> ($format.currency($totalTaxedAmounts[$tax]))</span>
+                 #end if
+             :</td>
+				<td class="price">$format.currency($totalTaxes[$tax])</td>
+			</tr>
+            #end for
+
+			#end if
+	    #end if
+
+			<!-- total -->
+			<tr class="total">
+				<td class="right" colspan="2">$l10n.localize('Total'):</td>
+				<td class="price">$format.currency($totalPriceIn)</td>
+			</tr>
+
+			<!-- payment totals prefs -->
+			#if $documentType == 'invoice' or $documentType == 'order'
+				#if $ReceiptTotalPaymentInformation
+					#if $payments
+						#for $payment in $payments
+							<tr>
+								#if $documentType == 'order'
+									<td class="right" colspan="2">$l10n.localize('Deposited') $payment.payment.name @ $payment.payment.terminal.md.number:</td>
+									<td class="price">$format.currency($payment.payment.amount)</td>
+								#elif $payment.payment.isOnlineCCPayment()
+									#if $payment.payment.info and $payment.payment.info.has_key('pg_last4')
+										<td class="right" colspan="2">Paid by card ...$payment.payment.info.pg_last4:</td>
+									#else
+										<td class="right" colspan="2">Paid by Credit Card:</td>
+									#end if
+									<td class="price">$format.currency($payment.payment.amount)</td>
+								#else
+									<td class="right" colspan="2">$payment.payment.name:</td>
+									<td class="price">$format.currency($payment.payment.amount)</td>
+								#end if
+							</tr>
+						#end for
+					#else
+						<tr>
+						<td class="right" colspan="2">$l10n.localize('Paid'):</td>
+						<td class="price">$format.currency($paymentTotal)</td>
+						</tr>
+					#end if
+					<tr class="total">
+					<td class="right" colspan="2">$l10n.localize('Total Due'):</td>
+					<td class="price">$format.currency($due)</td>
+					</tr>
+				#end if
+			#end if
+			#end if
+		</tbody>
+	</table>
+
+	<!-- Credit Card -->
+
+	#if $hasOnlineCCPayments and $PrintGiftOrPackingSlip == 'regular'
+		<div id="card_signature">
+			#for $payment in $payments
+				#if $payment.payment.isOnlineCCPayment()
+					<div class="container clearfix">
+
+						<ul class="unstyled">
+							#if $payment.payment.info.has_key('pg_last4')
+								<li>$l10n.localize('act # ************')$payment.payment.info.pg_last4</li>
+							#end if
+
+							#if $payment.payment.info and $payment.payment.info.has_key('pg_card_type') and $payment.payment.info.pg_card_type != '????'
+								<li>$l10n.localize('card type'): $payment.payment.info.pg_card_type</li>
+							#end if
+
+							#if $payment.payment.info and $payment.payment.info.has_key('pg_authorization_code')
+								 <li>$l10n.localize('approval code'): $payment.payment.info.pg_authorization_code</li>
+							#end if
+
+						    #if $payment.payment.info and $payment.payment.info.has_key('pg_name')
+								<li>$l10n.localize('name'): $payment.payment.info.pg_name</li>
+							#end if
+
+								<li>$l10n.localize('amount'): $format.currency($payment.payment.amount)</li>
+
+						</ul>
+
+					</div>
+		</div>
+
+
+					<!-- TIP and Total Paid -->
+
+					#if $ReceiptTipsAndTotalField
+
+						<div class="container clearfix">
+							<div class="col col-3 title">TIP:</div>
+							<div class="col col-3 value">$</div>
+					    </div>
+
+						<div class="container clearfix">
+							<div class="col col-3 title">TOTAL:</div>
+							<div class="col col-3 value">$</div>
+						</div>
+
+					#end if
+
+					<!-- Signature -->
+
+					<div align="left">
+					 	<FONT FACE="Monaco" SIZE="4"><b>X</b></FONT>
+						<hr width="95%" align="center" size=1 noshade color = #000>
+					</div>
+
+			 		<div class ="signature_agreement" align="center">
+			 			<b>Cardmember agrees to pay total in accordance with agreement governing use of such card.</b>
+			 		    <br><br><br>
+					</div>
+
+				#end if
+			#end for
+	#else
+  <!-- TIP and Total Paid -->
+		#if $ReceiptTipsAndTotalField
+			<div class="container clearfix">
+					<div class="container clearfix">
+						<div class="col col-3 title">TIP:</div>
+						<div class="col col-3 value">$</div>
+				    </div>
+
+					<div class="container clearfix">
+						<div class="col col-3 title">TOTAL:</div>
+						<div class="col col-3 value">$</div>
+					</div>
+
+				<!-- Signature -->
+
+				<div alight="left">
+				 	<FONT FACE="Monaco" SIZE="4"><b>X</b></FONT>
+					<hr width="95%" align="center" size=1 noshade color = #000>
+				</div>
+
+				<div class="signature_agreement" align="center">
+	  	 			  <b>Cardmember agrees to pay total in accordance with agreement governing use of such card.</b>
+	  	 		    <br><br><br>
+	            </div>
+			</div>
+		#end if
+	#end if
+
+	<div id="doc_info">
+
+		#if $documentType == 'order'
+			$l10n.localize_chars_only($documentTitle)<br>
+		#elif $documentType == 'invoice'
+			$l10n.localize_chars_only('Invoice')<br>
+		#end if
+
+		#if $ReceiptTotalPaymentInformation
+			#if $payments
+				#if len($payments) > 1
+					$l10n.localize('Paid @ Terminals'):
+				#else
+					$l10n.localize('Paid @ Terminal'):
+				#end if
+				#for $payment in $payments
+					#if $payment != $payments[len($payments) -1]
+						$format.unify($payment.payment.terminal.md.number),
+					#else
+						$payment.payment.terminal.md.number
+					#end if
+				#end for
+				<br>
+			#end if
+		#end if
+
+    $format.shortDate($date)<br><br>
+
+	<!-- Display Notes -->
+
+	#if $currentNote and $ReceiptNotesField
+
+		#if $len($allNotes) > 1
+			<div>
+				<h4>$l10n.localize('Notes')</h4>
+				<ul>
+				#for $note in $allNotes
+					<li>$note.content</li>
+				#end for
+				</ul>
+			</div>
+		#else
+			<div>
+				<h4>$l10n.localize('Note')</h4>
+					<ul>
+						<li>$currentNote.content</li>
+					</ul>
+			</div>
+		#end if
+
+	#end if
+
+
+	</div>
+
+
+
+    #if $templateFooter
+		<div id="store_footer">
+			$templateFooter
+		</div>
+	#end if
+
+</body>
+</html>

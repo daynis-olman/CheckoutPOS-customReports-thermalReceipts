@@ -1,0 +1,339 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title></title>
+	<link href="common.css?versopm=$randomValue" rel="stylesheet" type="text/css" />
+	<link href="style.css?version=$randomValue" rel="stylesheet" type="text/css" />
+</head>
+<!-- checkout:header -->
+
+	<!-- shipping info suppport -->
+
+	#if $has_shipping
+		#set $doc_info_id = "shipping_doc_info"
+		#set $store_info_id = "shipping_store_info"
+		#set $client_info_id = "shipping_client_info_billing"
+	#else
+		#set $doc_info_id = "doc_info"
+		#set $store_info_id = "store_info"
+		#set $client_info_id = "client_info"
+	#end if
+
+<body>
+	<div class="doc-header">
+		<div class="container clearfix">
+			<div class="col col-2 col-right">
+				#if $storeName
+				<i>$storeName</i><br>
+				#end if
+				$templateHeader
+			</div>
+	        <div class="col col-3 col-left">
+	        	<div class="clearfix container">
+				#if $client
+					<!-- shipping info suppport -->
+					<div class="col col-4">
+					#if $has_shipping
+
+						<b>$l10n.localize('Bill to'):</b><br>
+						#if $md.company and $md.name
+							$md.company<br>
+							$format.name($md.name)<br>
+						#elif $md.company
+							$format.name($md.company)<br>
+						#elif $md.name
+							$format.name($md.name)<br>
+						#end if
+
+					#else
+						#if $md.company and $md.name
+							<i>$md.company</i><br>
+							<b>$format.name($md.name)</b><br>
+						#elif $md.company
+							<b>$format.name($md.company)</b><br>
+						#elif $md.name
+							<b>$format.name($md.name)</b><br>
+						#end if
+					#end if
+
+					#if $md.address
+						$format.address($md.address)
+					#end if
+
+					#if $md.taxnumber
+						$l10n.localize('Tax Number'): $md.taxnumber
+					#end if
+					</div>
+
+					<!-- shipping info suppport -->
+					<div class="col col-4">
+					#if $has_shipping
+						<b>$l10n.localize('Ship to'):</b><br>
+						#if $md_shipping.company and $md_shipping.name
+							$md_shipping.company<br>
+							$format.name($md_shipping.name)<br>
+						#elif $md_shipping.company
+							$format.name($md_shipping.company)<br>
+						#elif $md_shipping.name
+							$format.name($md_shipping.name)<br>
+						#end if
+
+						#if $md_shipping.address
+							$format.address($md_shipping.address)
+						#end if
+
+						#if $md.taxnumber
+							$l10n.localize('Tax Number'): $md.taxnumber
+						#end if
+					#end if
+					</div>
+
+				#end if
+				</div>
+			</div>
+			<div class="col col-3 col-center">
+			#if $storeImageURL
+				#if $storeImageAutoSize == True:
+					<img class="store-logo" src="$storeImageURL" alt="" />
+				#else
+					<img src="$storeImageURL" alt="" />
+				#end if
+			#else
+				$storeName
+			#end if
+			</div>
+	     </div>
+
+		<div class="col-center">
+			<b>$l10n.localize_chars_only($documentTitle)</b>, $l10n.localize('Date') $format.longDate($date)
+		</div>
+	</div>
+	<!-- checkout:content -->
+
+	<!-- product list -->
+	<div class="wrapper-table">
+
+		#if $PrintGiftOrPackingSlip == 'gift'
+			<div class="watermark">GIFT INVOICE</div>
+		#elif $PrintGiftOrPackingSlip == 'packingSlip'
+			<div class="watermark">PACKING SLIP</div>
+		#end if
+
+		<table id="products" class="gift-table" cellspacing="0" cellpadding="0">
+			<thead>
+				<tr>
+					<th class="right">#</th>
+					<th class="left">$l10n.localize('Code')</th>
+					<th class="left">$l10n.localize('Brand')</th>
+					<th class="left">$l10n.localize('Name')</th>
+					#if $PrintGiftOrPackingSlip == 'regular'
+					#if $hasDiscounts
+					<th class="left">%</th>
+                    <th class="right">$l10n.localize('List Price')</th>
+					#end if
+					<th class="right">$l10n.localize('Price')</th>
+					<th class="right">$l10n.localize('Total')</th>
+					#end if
+				</tr>
+			</thead>
+			<tbody>
+			#for $product in $productChildren
+				<tr>
+					<td class="right">$format.quantity($product.quantity)</td>
+					<td class="left">$product.md.code</td>
+					<td class="left">$product.md.brand</td>
+					<td class="left">$product.displayName
+
+						#if $PrintProductDescriptions
+						#if $product.md.description
+						<br>$product.md.description
+						#end if
+						#end if
+
+						#if $product.serials
+						<br>
+						#for $serial in $product.serials
+						#if $serial.value
+						<span class="serial">$serial.value - </span>
+						#end if
+						#end for
+						#end if
+					</td>
+				#if $PrintGiftOrPackingSlip == 'regular'
+					#if $hasDiscounts
+					<td class="left">$format.quantity($product.discount_percentage)</td>
+					#end if
+					#if $PrintProductsIncludingTax
+                      #if $hasDiscounts
+					    <td class="right">$format.currency($product.product.priceIn)</td>
+					  #end if
+					<td class="right">$format.currency($product.priceIn)</td>
+					<td class="price total">$format.currency($product.totalPriceIn)</td>
+                    #else
+                      #if $hasDiscounts
+                        <td class="right">$format.currency($product.product.priceEx)</td>
+					  #end if
+					<td class="right">$format.currency($product.priceEx)</td>
+					<td class="price total">$format.currency($product.totalPriceEx)</td>
+					#end if
+				#end if
+				</tr>
+			#end for
+			</tbody>
+		</table>
+
+		<br>
+
+		<!-- Total Discount -->
+		#if $InvoiceTotalDiscountInfo and $receiptTotalDiscount > 0 and $PrintGiftOrPackingSlip == 'regular'
+			<div class="discount_container">
+				<h3>$l10n.localize('Total Discount'): $format.currency($receiptTotalDiscount)</h3>
+			</div>
+		#end if
+
+	</div>
+
+	<!-- checkout:footer -->
+
+	<!-- shipping info suppport -->
+
+
+#if $PrintGiftOrPackingSlip == 'regular'
+	<div id="doc_total">
+		<div class="clearfix container">
+			<div class="col col-left col-2">
+                #if $currentNote and $InvoiceNotesField
+                    #if $len($allNotes) > 1
+                        <div class="notes">
+                            <h4 class="notes_title">$l10n.localize('Notes')</h4>
+                            <ul>
+                            #for $note in $allNotes
+                                <li>$note.content</li>
+                            #end for
+                            </ul>
+                        </div>
+                    #else
+                        <div class="notes">
+                            <h4 class="notes_title">$l10n.localize('Note')</h4>
+                            <ul>
+                                <li>$currentNote.content</li>
+                            </ul>
+                        </div>
+                    #end if
+                #end if
+
+               <!-- Employee on duty -->
+                <div id="store-info">
+					<i>$storeName</i><br>
+					<b>$employee.name()</b><br>
+					$templateHeader
+				</div>
+			</div>
+
+			<div class="col col-center col-3-center-flexible signature">
+	            #if $InvoiceTipsAndTotalField
+		            <div class="container clearfix">
+		            	<div class="col col-2 signature">
+							<strong>$l10n.localize('Sign Here'):</strong>
+		              	</div>
+		              	<div class="col col-6 underline"></div>
+		            </div>
+                #end if
+			</div>
+
+			<div class="col col-3-flexible col-right pull-right">
+				<table class="table">
+					<tbody>
+						<!-- default totals -->
+						<!-- shipping method support -->
+						#if $shippingMethodRequest
+							<tr class="sub">
+								<td>$l10n.localize('Shipping') ($getBindableShippingMethod):</td>
+								<td class="price">$format.currency($shippingMethodRequest.totalPriceEx)</td>
+							</tr>
+						#end if
+
+				        #if $InvoiceShowTaxesAndSubtotal
+							<tr class="sub">
+								<td>$l10n.localize('Subtotal'):</td>
+								<td class="price">$format.currency($totalPriceEx)</td>
+							</tr>
+							#if $PrintCombinedTaxInTotals
+								<tr>
+									<td>$l10n.localize('Taxes'):</td>
+									<td class="price">$format.currency($totalTax)</td>
+								</tr>
+							#else
+								#for tax in $totalTaxes
+								<tr>
+									<td>$tax.name $format.taxrate($tax.rate)
+                 #if $TemplasteShowTaxExAmountForTaxRate
+                     <span style='white-space:nowrap;'> ($format.currency($totalTaxedAmounts[$tax]))</span>
+                 #end if
+             :</td>
+									<td class="price">$format.currency($totalTaxes[$tax])</td>
+								</tr>
+								#end for
+							#end if
+						#end if
+
+				        <tr class="total">
+							<td>$l10n.localize('Total'):</td>
+							<td class="price">$format.currency($totalPriceIn)</td>
+						</tr>
+
+						<!-- deposits support -->
+						#if $PrintTotalPaymentInformation
+							#if $payments
+								#for $payment in $payments
+									<tr>
+										<td>$l10n.localize('Deposited') $payment.payment.name @ $payment.payment.terminal.md.number:</td>
+										<td class="price">$format.currency($payment.payment.amount)</td>
+									</tr>
+								#end for
+									<tr class="total">
+										<td>$l10n.localize('Unpaid'):</td>
+										<td class="price">$format.currency($due)</td>
+									</tr>
+							#end if
+						#end if
+						<!-- end deposits support -->
+
+						<!-- Tips -->
+	                    #if $InvoiceTipsAndTotalField
+	                        <tr class="paid">
+	                            <td>$l10n.localize('Tips'):</td>
+	                            <td></td>
+	                        </tr>
+	                    #end if
+
+	                    <tr class="total">
+	                        #if $InvoiceTipsAndTotalField
+	                            <td>$l10n.localize('Total'):</td>
+	                            <td></td>
+	                        #else
+	                            <td>$l10n.localize('Due'):</td>
+	                            <td class="price">$format.currency($due)</td>
+	                        #end if
+	                    </tr>
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+  </div>
+
+#end if
+
+	#if $templateFooter
+	<div id="store_footer">
+		$templateFooter
+	</div>
+	#end if
+
+<!-- checkout:end -->
+</body>
+</html>

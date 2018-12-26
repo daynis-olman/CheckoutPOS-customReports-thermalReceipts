@@ -1,0 +1,114 @@
+/* set some standards
+---------------------*/
+/* preparation for color selection variable */
+b, i, #doc_name, td[class~="total"] {color:#0080A2;}
+body {position:relative; font:9.5px 'Helvetica Neue', Helvetica, sans-serif; color:#333; padding:0px; margin:0px;}
+table {border:none;}
+
+/* document header
+------------------*/
+
+.store-logo {float:right; width:auto;}
+#doc_name {display:block; font-size:2.5em;}
+
+/*#doc_header {margin:0 0 30px 0;}
+
+#store_name {float:right; color:#0080A2; font-size:2em; width:auto;}
+#doc_name {display:block; font-size:2.5em;}
+#doc_info {font-size:0.9em;}
+#client_info {margin:40px 0 0 0;}
+
+#shipping_doc_info {font-size:0.9em;}
+#shipping_store_info {}
+#shipping_client_info_billing {float:left; margin:40px 0 0 0;}
+#shipping_client_info_shipping {float:left; margin:40px 0 0 24px;}*/
+
+/* TIP and Total Paid
+
+
+/* product table
+----------------*/
+#products {width:100%;}
+#products th {font-size:1.15em; padding-bottom:0.2em; border-bottom:1px solid #aaa;}
+#products td {padding:0.4em 0; border-top:1px solid #ddd;}
+#products tr:first-child td {padding-top:0.4em; border-top:none;}
+#products tr span.serial {font-size: 1.30em;}
+#products tr span.code {color:#555;} /* serial */
+.right {text-align:right; padding-left:0.6em;}
+.left, #products tbody td.left {text-align:left; padding-left:0.6em;} /* ? */
+#products tbody { font-size: 1.30em; }
+
+#products tr th.price, #products tr td.price {padding-left:0.5em; white-space:nowrap; text-align:right;}
+
+/*  Notes
+--------------*/
+.notes_title {color: #3a87ad; border-bottom:1px solid #0080A2; width: 200px;}
+
+/* document footer
+------------------*/
+#doc_total {margin:20px 0 0 0;}
+#store_info {}
+
+/* document total
+-----------------*/
+/*#doc_total table {float:right; text-align:right; width:auto;}
+#doc_total table tr td {padding:0.4em 0 0.4em 1em;}*/
+tr.sub td {border-bottom:1px solid #ddd;}
+tr.paid td {border-top:1px solid #ddd;}
+tr.total td {font-size:1.2em; font-weight:bold; border-top:double #aaa;}
+tr.totalheader td {font-size:1.2em; font-weight:bold; text-align:right; border-bottom:1px solid #aaa;}
+
+#received {}
+#onorder {margin-right:20px;}
+
+/* store footer
+---------------*/
+#store_footer {
+    width:100%;
+    text-align:center;
+    font-size:0.9em;
+    font-style:italic;
+    margin:2em 0 0 0;
+    padding:1em 0 0 0;
+    border-top:1px solid #ccc;}
+
+/* GIFT WATERMARK
+----------------*/
+.wrapper-table {position: relative; min-height: 250px}
+
+.wrapper-table .watermark {
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    width:200px;
+    display: block;
+    opacity: .25;
+    color: #333;
+    font-weight: 900;
+    font-size: 56px;
+    font-family: Verdana;
+    padding: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    z-index: 1;
+    -webkit-transform: rotate(-45deg);
+}
+
+.wrapper-table .gift-table {
+    position: relative;
+    z-index: 2;
+}
+
+/*ORDER TOTAL DISCOUNT
+=====================*/
+
+.discount_container {
+    position: relative;
+    padding-left: 60%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/*  Notes
+--------------*/
+.notes_title {color: #000; border-bottom:1px solid #0080A2; width: 250px;}
