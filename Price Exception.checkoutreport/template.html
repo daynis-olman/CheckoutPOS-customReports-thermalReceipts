@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title></title>
+	<script src="file://$corePath/sorttable.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="file://$corePath/report.css?version=$randomValue" type="text/css" charset="utf-8">
+	<link rel="stylesheet" href="file://$corePath/print.css?version=$randomValue" media="print" type="text/css" charset="utf-8">
+</head>
+<body>
+
+<div id="container">
+	<div id="header">
+		<div id="name">
+			$format.string($report.name)
+		</div>
+		<div id="date">
+			$format.string('Date Range'): $format.onlyDate($report.dateRange.begin) - $format.onlyDate($report.dateRange.end)
+		</div>
+	</div>
+
+	<!-- Totals -->
+	<!-- <div class="table_name">$format.string('Totals')</div> -->
+	<table border="0" cellspacing="0" cellpadding="0" class="sortable">
+		<thead>
+			<tr>
+				<th>$format.string('Code')</th>
+				<th>$format.string('Name')</th>
+				<th>$format.string('Invoice')</th>
+				<th>$format.string('Date')</th>
+				<th>$format.string('Employee')</th>
+				<th>$format.string('Customer')</th>
+				<th>$format.string('Quantity')</th>
+				<th>$format.string('List Price')</th>
+				<th>$format.string('Inv Price')</th>
+				<th>$format.string('Difference')</th>
+				<!-- th>$format.string('Gross Sales')</th -->
+			</tr>
+		</thead>
+		<tbody>
+		        #set $quantity_sum = 0
+			#set $listPriceEx_sum = 0
+			#set $effectivePriceEx_sum = 0
+			#set $priceDifference_sum = 0
+			#for $product in $products
+				#for $productLine in $productToLineDict[$product]
+			         #set $quantity_sum += $productLine.quantity
+			         #set $listPriceEx_sum += $productLine.listPriceEx
+			         #set $effectivePriceEx_sum += $productLine.effectivePriceEx
+			         #set $priceDifference_sum += $productLine.priceDifference
+				<tr>
+					<td style="text-align:left;">$productLine.productCode</td>
+					<td style="text-align:left;">$productLine.productName</td>
+					<td style="text-align:left;">$productLine.formattedNumber</td>
+					<td style="text-align:left;">$format.shortDate($productLine.invoiceDate)</td>
+					<td style="text-align:left;">$productLine.employeeName</td>
+					<td style="text-align:left;">$productLine.customerName</td>
+					<td style="text-align:right;">$format.quantity($productLine.quantity)</td>
+					<td sorttable_customkey="$productLine.listPriceEx">$format.currency($productLine.listPriceEx)</td>
+					<td sorttable_customkey="$productLine.effectivePriceEx">$format.currency($productLine.effectivePriceEx)</td>
+					<td sorttable_customkey="$productLine.priceDifference" style="text-align:right;">$format.currency($productLine.priceDifference)</td>
+				</tr>
+				#end for
+			#end for
+		</tbody>
+		<tfoot>
+		  <td colspan="6"></td>
+		  <td>$format.quantity($quantity_sum)</td>
+		  <td>$format.currency($listPriceEx_sum)</td>
+		  <td>$format.currency($effectivePriceEx_sum)</td>
+		  <td>$format.currency($priceDifference_sum)</td>
+		</tfoot>
+	</table>
+
+</div>
+</body>
+</html>
